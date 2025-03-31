@@ -1,3 +1,5 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.  
+# SPDX-License-Identifier: CC-BY-NC-4.0
 JAVA_TIMEOUT = 1200
 DEFAULT_TIMEOUT = 340
 

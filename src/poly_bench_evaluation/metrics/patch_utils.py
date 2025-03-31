@@ -1,3 +1,5 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.  
+# SPDX-License-Identifier: CC-BY-NC-4.0
 from collections import defaultdict
 from pathlib import Path
 from typing import DefaultDict, Dict, List, Optional, Set, Tuple, Union
