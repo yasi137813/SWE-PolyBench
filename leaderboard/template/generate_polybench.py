@@ -25,7 +25,7 @@ with open('polybench_data.json', 'r') as f:
 output_html_polybench = template_polybench.render(data)
 
 # Write the output to a new HTML file
-with open('../polybench.html', 'w') as f:
+with open('../index.html', 'w') as f:
     f.write(output_html_polybench)
 
 print("PolyBench page generated successfully!")
