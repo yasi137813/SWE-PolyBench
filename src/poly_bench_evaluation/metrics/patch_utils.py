@@ -211,6 +211,18 @@ class Patch:
 
         file_nodes: DefaultDict[str, Set[Node]] = defaultdict(set)
         for file, lines in modified_lines.items():
+
+            extension = Path(file).suffix
+            language_name = EXTENSION_LANGUAGE_MAP.get(extension)
+            if not language_name:
+                logger.info(f"Can't build CST for {extension} file. Skipping.")
+                continue
+
+            if len(lines) > 1000:
+                logger.warning(
+                    f"File {file} has {len(lines)} modified lines. This may take a while."
+                )
+
             file_path = Path(repo_root_path) / file
             node_set = [get_node_by_line_number(file_path, line) for line in lines]
             node_set = [

@@ -24,7 +24,12 @@ def _get_node_identifier(node: Node) -> str:
     if len(func_or_class_name) >= 1:
         return "_".join(func_or_class_name)
     else:
-        raise ValueError(f"Found no identifier for {node}")
+        # For node.type == 'pair' it is not uncommon
+        # to not find an identity
+        if node.type == "pair":
+            return []
+        else:
+            raise ValueError(f"Found no identifier for {node}")
 
 
 def _find_inner_most_node(tree: Tree, line_number: int) -> Node:
@@ -45,7 +50,15 @@ def _find_inner_most_node(tree: Tree, line_number: int) -> Node:
         if node.start_point[0] + 1 <= line_number <= node.end_point[0] + 1:
             matching_node = None
             if node.type in TREE_SITTER_FUNC_CLASS_TYPES:
-                matching_node = node
+                if node.type == "pair":
+                    # If there is any function defined in this pair,
+                    # we return the pair node which contains the name.
+                    if any(["function" in n.type for n in node.children]):
+                        matching_node = node
+                    else:
+                        matching_node = None
+                else:
+                    matching_node = node
 
             for child in reversed(node.children):
                 result = traverse(child)
