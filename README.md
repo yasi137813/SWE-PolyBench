@@ -60,6 +60,8 @@ If you are building all images and they are not available locally, then please e
 
 For running the sampled dataset, we expect the runtime to be ~7-8 hours (with 7-8 threads) if building images locally.
 
+## Submission
+To make a submission to SWE-PolyBench leaderboard, please follow this [README](https://github.com/amazon-science/SWE-PolyBench/blob/submission/README.md).
 
 ## Troubleshooting
 If you get container conflict error (which may happen if you terminate your running code and run again), then please execute this command in terminal:
