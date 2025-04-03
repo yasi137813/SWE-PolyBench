@@ -224,42 +224,20 @@ class Patch:
                 )
 
             file_path = Path(repo_root_path) / file
-            # node_set = [get_node_by_line_number(file_path, line) for line in lines]
+            node_set = [get_node_by_line_number(file_path, line) for line in lines]
 
-            def get_nodes_for_lines(file_path, lines):
-                nodes = []
-                node_ranges = []  # List of (start, end) tuples
-                sorted_lines = sorted(set(lines))  # Remove duplicates and sort
+            node_set = [
+               node
+               for node in node_set
+               if node is not None and node.type not in TREE_SITTER_TOP_LEVEL_NODE_TYPES
+            ]
 
-                for line in sorted_lines:
-                    # Check if the line is within any existing node range
-                    for i, (start, end) in enumerate(node_ranges):
-                        if start <= line <= end:
-                            # Line is covered by an existing node
-                            break
-                    else:
-                        # Line is not covered, so we need to get a new node
-                        new_node = get_node_by_line_number(file_path, line)
-                        if new_node.type not in TREE_SITTER_TOP_LEVEL_NODE_TYPES:
-                            nodes.append(new_node)
-                            start, end = _get_node_key(new_node)
-                            node_ranges.append((start[0], end[0]))
-                return nodes
-
-            unique_nodes = get_nodes_for_lines(file_path, lines)
-
-            # node_set = [
-            #    node
-            #    for node in node_set
-            #    if node is not None and node.type not in TREE_SITTER_TOP_LEVEL_NODE_TYPES
-            # ]
-
-            # _visited = set()
-            # unique_nodes = [
-            #    node
-            #    for node in node_set
-            #    if not (_get_node_key(node) in _visited or _visited.add(_get_node_key(node)))  # type: ignore[func-returns-value]
-            # ]
+            _visited = set()
+            unique_nodes = [
+               node
+               for node in node_set
+               if not (_get_node_key(node) in _visited or _visited.add(_get_node_key(node)))  # type: ignore[func-returns-value]
+            ]
 
             for node in unique_nodes:
                 if node is not None:
