@@ -283,8 +283,8 @@ EOF"""
         """
 
         if self.check_image_local(local_image_name=f"polybench_{language.lower()}_base"):
-                logger.info(f"Base image for {language} already exists locally.")
-                return
+            logger.info(f"Base image for {language} already exists locally.")
+            return
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_base_path = Path(tmp_dir)

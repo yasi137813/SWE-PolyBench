@@ -53,8 +53,9 @@ def _find_inner_most_node(tree: Tree, line_number: int) -> Node:
                 if node.type == "pair":
                     # If there is any function defined in this pair,
                     # we return the pair node which contains the name.
-                    if any(["function" in n.type for n in node.children]):
-                        matching_node = node
+                    function_child = next((child for child in node.children if child.type == "function"), None)
+                    if function_child:
+                        matching_node = function_child
                     else:
                         matching_node = None
                 else:

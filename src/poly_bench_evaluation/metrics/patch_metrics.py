@@ -116,6 +116,7 @@ def _get_node_metric_inputs(
     predicted_patch: Patch,
     repo_manager: RepoManager,
     return_nodes: bool = False,
+    reference_nodes_full: set = None
 ) -> Tuple[List[int], List[int], int, Optional[Set[str]], Optional[Set[str]]]:
     """Compute the common part of node retrieval metrics.
 
@@ -128,21 +129,24 @@ def _get_node_metric_inputs(
         A tuple containing y_true and y_pred lists.
     """
 
-    try:
-        reference_nodes = reference_patch.get_modified_nodes(repo_manager=repo_manager)
-    except Exception as e:
-        raise ValueError(f"Error in getting reference nodes: {e}") from e
+    # We are now getting reference nodes from the data set, this is no longer needed
+    # but kept in case we want to compute nodes for different datasets.
+    #try:
+    #   reference_nodes = reference_patch.get_modified_nodes(repo_manager=repo_manager)
+    #except Exception as e:
+    #   raise ValueError(f"Error in getting reference nodes: {e}") from e
 
-    reference_nodes_full = set(
-        [
-            f"{file}->{cst_path}"
-            for file, cst_path_set in reference_nodes.items()
-            for cst_path in cst_path_set
-        ]
-    )
+    #reference_nodes_full = set(
+    #   [
+    #       f"{file}->{cst_path}"
+    #       for file, cst_path_set in reference_nodes.items()
+    #       for cst_path in cst_path_set
+    #   ]
+    #)
 
-    # the above will apply `reference_patch` to the repo, hence we reset it
-    repo_manager.reset_repo()
+    ## the above will apply `reference_patch` to the repo, hence we reset it
+    #repo_manager.reset_repo()
+
     try:
         predicted_nodes = predicted_patch.get_modified_nodes(repo_manager=repo_manager)
     except Exception as e:

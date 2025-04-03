@@ -1,6 +1,7 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.  
 # SPDX-License-Identifier: CC-BY-NC-4.0
 import ast
+import json
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 
@@ -24,6 +25,7 @@ class PolyBenchInstance(BaseModel):
     f2p: List[str]
     p2p: List[str]
     test_command: str
+    modified_nodes: List[str]
 
 
 @dataclass
@@ -87,5 +89,6 @@ def dataset_generator(data: pd.DataFrame):
                 "f2p": ast.literal_eval(row.F2P),
                 "p2p": ast.literal_eval(row.P2P),
                 "test_command": row.test_command,
+                "modified_nodes": json.loads(row.modified_nodes)
             }
         )

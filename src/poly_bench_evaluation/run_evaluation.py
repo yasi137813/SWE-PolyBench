@@ -6,6 +6,7 @@ import importlib
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
 from typing import Union
+import json
 
 import docker
 import pandas as pd
@@ -76,7 +77,9 @@ def evaluate_instance(
     if retrieval_metrics_only:
         logger.info(f"Computing only retrieval metrics for {instance_id}")
         instance_output = instance_level_metric_scoring(
-            instance=instance, repo_path=repo_path, node_retrieval_metrics=node_retrieval_metrics
+            instance=instance, repo_path=repo_path, node_retrieval_metrics=node_retrieval_metrics,
+            modified_nodes=instance.modified_nodes
+
         )
         store_instance_level_output(
             instance_output=instance_output, result_path=result_path, suffix="_metrics"
