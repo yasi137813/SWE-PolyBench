@@ -1,4 +1,4 @@
-# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.  
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: CC-BY-NC-4.0
 import functools
 from dataclasses import dataclass, field
@@ -26,7 +26,12 @@ TREE_SITTER_FUNC_CLASS_TYPES = [
 
 TREE_SITTER_TOP_LEVEL_NODE_TYPES = ["module", "program"]
 
-TREE_SITTER_NAME_IDENTIFIER = ["identifier", "property_identifier", "type_identifier", "computed_property_name"]
+TREE_SITTER_NAME_IDENTIFIER = [
+    "identifier",
+    "property_identifier",
+    "type_identifier",
+    "computed_property_name",
+]
 
 
 @dataclass

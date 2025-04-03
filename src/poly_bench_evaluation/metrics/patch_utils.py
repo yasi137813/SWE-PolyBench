@@ -1,4 +1,4 @@
-# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.  
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: CC-BY-NC-4.0
 from collections import defaultdict
 from pathlib import Path
@@ -224,7 +224,7 @@ class Patch:
                 )
 
             file_path = Path(repo_root_path) / file
-            #node_set = [get_node_by_line_number(file_path, line) for line in lines]
+            # node_set = [get_node_by_line_number(file_path, line) for line in lines]
 
             def get_nodes_for_lines(file_path, lines):
                 nodes = []
@@ -248,18 +248,18 @@ class Patch:
 
             unique_nodes = get_nodes_for_lines(file_path, lines)
 
-            #node_set = [
+            # node_set = [
             #    node
             #    for node in node_set
             #    if node is not None and node.type not in TREE_SITTER_TOP_LEVEL_NODE_TYPES
-            #]
+            # ]
 
-            #_visited = set()
-            #unique_nodes = [
+            # _visited = set()
+            # unique_nodes = [
             #    node
             #    for node in node_set
             #    if not (_get_node_key(node) in _visited or _visited.add(_get_node_key(node)))  # type: ignore[func-returns-value]
-            #]
+            # ]
 
             for node in unique_nodes:
                 if node is not None:

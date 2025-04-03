@@ -1,4 +1,4 @@
-# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.  
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: CC-BY-NC-4.0
 
 import argparse
@@ -31,6 +31,7 @@ from poly_bench_evaluation.scoring import (
     store_instance_level_output,
 )
 from datasets import load_dataset
+
 
 def evaluate_instance(
     instance: PolyBenchInstance,
@@ -77,9 +78,10 @@ def evaluate_instance(
     if retrieval_metrics_only:
         logger.info(f"Computing only retrieval metrics for {instance_id}")
         instance_output = instance_level_metric_scoring(
-            instance=instance, repo_path=repo_path, node_retrieval_metrics=node_retrieval_metrics,
-            modified_nodes=instance.modified_nodes
-
+            instance=instance,
+            repo_path=repo_path,
+            node_retrieval_metrics=node_retrieval_metrics,
+            modified_nodes=instance.modified_nodes,
         )
         store_instance_level_output(
             instance_output=instance_output, result_path=result_path, suffix="_metrics"
@@ -129,8 +131,7 @@ def evaluate_instance(
         for attempt in range(retry):
             logger.info(f"Docker building - Attempt {attempt + 1}/{retry}")
             build_success = docker_manager.docker_build(
-                repo_path=repo_manager.tmp_repo_dir, 
-                dockerfile_content=instance.dockerfile
+                repo_path=repo_manager.tmp_repo_dir, dockerfile_content=instance.dockerfile
             )
 
             # Save build logs regardless of success/failure
@@ -144,11 +145,15 @@ def evaluate_instance(
                 break
 
             if attempt < retry - 1:  # Don't log "retrying" on the last attempt
-                logger.warning(f"Docker build failed for {instance_id} on attempt {attempt + 1}, retrying...")
+                logger.warning(
+                    f"Docker build failed for {instance_id} on attempt {attempt + 1}, retrying..."
+                )
 
         # If we get here, all retries failed
         if build_success != 0:
-            raise ValueError(f"Docker build failed for {instance_id} after {retry} attempts. Please check the dockerfile content and build logs.")
+            raise ValueError(
+                f"Docker build failed for {instance_id} after {retry} attempts. Please check the dockerfile content and build logs."
+            )
 
     # Create a docker container and run the image
     docker_manager.create_container()
@@ -287,7 +292,11 @@ def evaluate_predictions(
     """
     client = docker.from_env(timeout=720)
     try:
-        dataset = pd.read_csv(dataset_path) if dataset_path.endswith(".csv") else load_dataset(dataset_path).to_pandas()
+        dataset = (
+            pd.read_csv(dataset_path)
+            if dataset_path.endswith(".csv")
+            else load_dataset(dataset_path).to_pandas()
+        )
     except Exception:
         raise ValueError("Please provide a correct dataset file or huggingface path.")
 
@@ -307,7 +316,9 @@ def evaluate_predictions(
     for language in dataset["language"].unique():
         if language != "Python":
             base_image_id = f"polybench_{language.lower()}_base"
-            base_docker_manager = DockerManager(image_id=base_image_id, delete_image=False, client=client)
+            base_docker_manager = DockerManager(
+                image_id=base_image_id, delete_image=False, client=client
+            )
             base_docker_manager.build_base_image(language=language)
 
     if predictions_path:

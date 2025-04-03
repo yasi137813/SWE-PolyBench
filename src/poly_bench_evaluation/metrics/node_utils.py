@@ -1,4 +1,4 @@
-# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.  
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: CC-BY-NC-4.0
 from pathlib import Path
 from typing import Optional, Union
@@ -53,7 +53,9 @@ def _find_inner_most_node(tree: Tree, line_number: int) -> Node:
                 if node.type == "pair":
                     # If there is any function defined in this pair,
                     # we return the pair node which contains the name.
-                    function_child = next((child for child in node.children if child.type == "function"), None)
+                    function_child = next(
+                        (child for child in node.children if child.type == "function"), None
+                    )
                     if function_child:
                         matching_node = function_child
                     else:

@@ -1,4 +1,4 @@
-# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.  
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: CC-BY-NC-4.0
 from dataclasses import asdict
 from typing import Dict, Optional, Set
@@ -14,8 +14,10 @@ from .patch_utils import Patch
 
 
 def instance_level_metric_scoring(
-    instance: PolyBenchInstance, repo_path: str, node_retrieval_metrics: bool = False,
-    modified_nodes: list = None
+    instance: PolyBenchInstance,
+    repo_path: str,
+    node_retrieval_metrics: bool = False,
+    modified_nodes: list = None,
 ) -> PolyBenchRetrievalMetrics:
     repo = instance.repo
     model_patch = instance.model_patch
@@ -44,8 +46,11 @@ def instance_level_metric_scoring(
         failed_gt_patch_apply = False
         try:
             y_true, y_pred, num_ref_nodes, ref_nodes, pred_nodes = _get_node_metric_inputs(
-                reference_patch, predicted_patch, rm, return_nodes=True,
-                reference_nodes_full=set(modified_nodes)
+                reference_patch,
+                predicted_patch,
+                rm,
+                return_nodes=True,
+                reference_nodes_full=set(modified_nodes),
             )
             if num_ref_nodes == 0:
                 # No nodes were extracted
