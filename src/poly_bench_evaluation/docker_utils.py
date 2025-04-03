@@ -1,4 +1,4 @@
-# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.  
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: CC-BY-NC-4.0
 import io
 import json
@@ -13,6 +13,7 @@ import docker
 from loguru import logger
 from .constants import LANGUAGE_TO_BASE_DOCKERFILE
 
+
 class DockerManager:
     """A class for managing docker related operations."""
 
@@ -23,10 +24,10 @@ class DockerManager:
         self.delete_image = delete_image
         self.build_logs: List[str] = []
         self.run_logs: List[str] = []
-    
+
     def check_image_local(self, local_image_name: str) -> bool:
         """Check if image exists locally in Docker"""
-        
+
         try:
             _ = self.client.images.get(local_image_name)
             return True
@@ -283,28 +284,31 @@ EOF"""
         """
 
         if self.check_image_local(local_image_name=f"polybench_{language.lower()}_base"):
-                logger.info(f"Base image for {language} already exists locally.")
-                return
+            logger.info(f"Base image for {language} already exists locally.")
+            return
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             tmp_base_path = Path(tmp_dir)
-            
+
             for attempt in range(retry):
                 base_build_success = self.docker_build(
-                    repo_path=tmp_base_path, 
-                    dockerfile_content=LANGUAGE_TO_BASE_DOCKERFILE[language]
+                    repo_path=tmp_base_path,
+                    dockerfile_content=LANGUAGE_TO_BASE_DOCKERFILE[language],
                 )
-                
+
                 if base_build_success == 0:
-                    logger.info(f"Successfully built base image for {language} on attempt {attempt + 1}")
+                    logger.info(
+                        f"Successfully built base image for {language} on attempt {attempt + 1}"
+                    )
                     return
-                
+
                 if attempt < retry - 1:
-                    logger.info(f"Failed to build base image for {language} on attempt {attempt + 1}, retrying...")
-            
+                    logger.info(
+                        f"Failed to build base image for {language} on attempt {attempt + 1}, retrying..."
+                    )
+
             # If we get here, all retries failed
             raise ValueError(f"Failed to build base image for {language} after {retry} attempts")
-
 
     def _create_tar(self, name: str, content: bytes) -> bytes:
         """Create a tar archive containing a single file."""

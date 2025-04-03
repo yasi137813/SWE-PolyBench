@@ -1,4 +1,4 @@
-# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.  
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: CC-BY-NC-4.0
 import shutil
 import subprocess
@@ -13,6 +13,7 @@ from loguru import logger
 
 class RepoManager:
     """A class for repo level operations."""
+
     # Class-level lock dictionary to handle concurrent access to repositories
     _repo_locks = {}
     _locks_lock = threading.Lock()  # Lock for accessing _repo_locks

@@ -22,6 +22,7 @@ def mock_instance():
         f2p=["test1", "test2"],
         p2p=["test3", "test4"],
         test_command="python -m pytest",
+        modified_nodes=["node1", "node2"],
     )
 
 

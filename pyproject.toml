@@ -27,3 +27,26 @@ pretty = true
 # See also https://mypy.readthedocs.io/en/latest/running_mypy.html#missing-imports.
 ignore_missing_imports = true
 
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "poly_bench_evaluation"
+version = "0.1.0"
+description = "PolyBench Evaluation"
+requires-python = ">=3.10"
+dependencies = [
+    "docker",
+    "pandas",
+    "loguru",
+    "boto3",
+    "pydantic",
+    "GitPython",
+    "tree-sitter-languages==1.10.2",
+    "tree-sitter==0.21.3",
+    "scikit-learn==1.3.2",
+    "unidiff",
+    "whatthepatch",
+    "datasets"
+]

@@ -1,4 +1,4 @@
-# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.  
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: CC-BY-NC-4.0
 from collections import defaultdict
 from pathlib import Path
@@ -211,20 +211,55 @@ class Patch:
 
         file_nodes: DefaultDict[str, Set[Node]] = defaultdict(set)
         for file, lines in modified_lines.items():
-            file_path = Path(repo_root_path) / file
-            node_set = [get_node_by_line_number(file_path, line) for line in lines]
-            node_set = [
-                node
-                for node in node_set
-                if node is not None and node.type not in TREE_SITTER_TOP_LEVEL_NODE_TYPES
-            ]
 
-            _visited = set()
-            unique_nodes = [
-                node
-                for node in node_set
-                if not (_get_node_key(node) in _visited or _visited.add(_get_node_key(node)))  # type: ignore[func-returns-value]
-            ]
+            extension = Path(file).suffix
+            language_name = EXTENSION_LANGUAGE_MAP.get(extension)
+            if not language_name:
+                logger.info(f"Can't build CST for {extension} file. Skipping.")
+                continue
+
+            if len(lines) > 100:
+                logger.warning(
+                    f"File {file} has {len(lines)} modified lines. This may take a while."
+                )
+
+            file_path = Path(repo_root_path) / file
+            # node_set = [get_node_by_line_number(file_path, line) for line in lines]
+
+            def get_nodes_for_lines(file_path, lines):
+                nodes = []
+                node_ranges = []  # List of (start, end) tuples
+                sorted_lines = sorted(set(lines))  # Remove duplicates and sort
+
+                for line in sorted_lines:
+                    # Check if the line is within any existing node range
+                    for i, (start, end) in enumerate(node_ranges):
+                        if start <= line <= end:
+                            # Line is covered by an existing node
+                            break
+                    else:
+                        # Line is not covered, so we need to get a new node
+                        new_node = get_node_by_line_number(file_path, line)
+                        if new_node.type not in TREE_SITTER_TOP_LEVEL_NODE_TYPES:
+                            nodes.append(new_node)
+                            start, end = _get_node_key(new_node)
+                            node_ranges.append((start[0], end[0]))
+                return nodes
+
+            unique_nodes = get_nodes_for_lines(file_path, lines)
+
+            # node_set = [
+            #    node
+            #    for node in node_set
+            #    if node is not None and node.type not in TREE_SITTER_TOP_LEVEL_NODE_TYPES
+            # ]
+
+            # _visited = set()
+            # unique_nodes = [
+            #    node
+            #    for node in node_set
+            #    if not (_get_node_key(node) in _visited or _visited.add(_get_node_key(node)))  # type: ignore[func-returns-value]
+            # ]
 
             for node in unique_nodes:
                 if node is not None:
@@ -265,10 +300,14 @@ class Patch:
 
         # Get nodes at the current state of the repository
         repo_root_path = repo_manager.tmp_repo_dir
+
+        logger.info("Getting nodes before applying patch")
         pre_change_nodes = self._get_nodes(old_modified_lines, repo_root_path)
 
+        logger.info("applying patch")
         repo_manager.apply_patch(self.patch_str)
 
+        logger.info("Getting nodes after applying patch")
         post_change_nodes = self._get_nodes(new_modified_lines, repo_root_path)
 
         merged = defaultdict(set)

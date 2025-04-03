@@ -1,4 +1,4 @@
-# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.  
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: CC-BY-NC-4.0
 import functools
 from dataclasses import dataclass, field
@@ -14,6 +14,7 @@ except ImportError:
     get_language = functools.partial(Language, TREE_SITTER_LIBRARY_PATH)
 
 TREE_SITTER_FUNC_CLASS_TYPES = [
+    "pair",
     "function_definition",
     "class_definition",
     "function_declaration",
@@ -25,7 +26,12 @@ TREE_SITTER_FUNC_CLASS_TYPES = [
 
 TREE_SITTER_TOP_LEVEL_NODE_TYPES = ["module", "program"]
 
-TREE_SITTER_NAME_IDENTIFIER = ["identifier", "property_identifier", "type_identifier"]
+TREE_SITTER_NAME_IDENTIFIER = [
+    "identifier",
+    "property_identifier",
+    "type_identifier",
+    "computed_property_name",
+]
 
 
 @dataclass
@@ -68,18 +74,6 @@ class LanguageConfig:
 
 # Define supported tree-sitter languages
 CODE_LANGUAGE_CONFIGS = {
-    "bash": LanguageConfig(
-        extensions={".sh"},
-        tree_sitter_language_obj=get_language("bash"),
-    ),
-    "css": LanguageConfig(
-        extensions={".css"},
-        tree_sitter_language_obj=get_language("css"),
-    ),
-    "html": LanguageConfig(
-        extensions={".html", ".htm"},
-        tree_sitter_language_obj=get_language("html"),
-    ),
     "java": LanguageConfig(
         extensions={".java"},
         tree_sitter_language_obj=get_language("java"),
@@ -107,14 +101,6 @@ CODE_LANGUAGE_CONFIGS = {
             identifier_types={"identifier", "property_identifier", "type_identifier"},
         ),
     ),
-    "json": LanguageConfig(
-        extensions={".json", ".jsonl"},
-        tree_sitter_language_obj=get_language("json"),
-    ),
-    "markdown": LanguageConfig(
-        extensions={".md"},
-        tree_sitter_language_obj=get_language("markdown"),
-    ),
     "python": LanguageConfig(
         extensions={".py", ".py-tpl", ".pyi"},
         tree_sitter_language_obj=get_language("python"),
@@ -123,14 +109,6 @@ CODE_LANGUAGE_CONFIGS = {
             types_to_retain_if_top_level={"assignment"},
             identifier_types={"identifier"},
         ),
-    ),
-    "rst": LanguageConfig(
-        extensions={".rst"},
-        tree_sitter_language_obj=get_language("rst"),
-    ),
-    "toml": LanguageConfig(
-        extensions={".toml"},
-        tree_sitter_language_obj=get_language("toml"),
     ),
     "typescript": LanguageConfig(
         extensions={".ts"},
@@ -147,10 +125,6 @@ CODE_LANGUAGE_CONFIGS = {
             types_to_retain_if_top_level={"variable_declarator"},
             identifier_types={"identifier", "property_identifier", "type_identifier"},
         ),
-    ),
-    "yaml": LanguageConfig(
-        extensions={".yaml"},
-        tree_sitter_language_obj=get_language("yaml"),
     ),
 }
 EXTENSION_LANGUAGE_MAP = {
