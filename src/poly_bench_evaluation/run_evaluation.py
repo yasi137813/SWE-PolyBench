@@ -295,7 +295,7 @@ def evaluate_predictions(
         dataset = (
             pd.read_csv(dataset_path)
             if dataset_path.endswith(".csv")
-            else load_dataset(dataset_path).to_pandas()
+            else load_dataset(dataset_path, split="test").to_pandas()
         )
     except Exception:
         raise ValueError("Please provide a correct dataset file or huggingface path.")
