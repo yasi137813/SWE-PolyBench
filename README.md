@@ -11,7 +11,7 @@ Python: 199
 Java: 165
 
 ## Datasets
-The datasets are available on [Huggingface](https://huggingface.co/datasets/swe-bench/polybench). We have the full dataset (PB) with 2110 instances and a sampled dataset (total 500 instances) called `PB500` where we have 125 instances from each language and a good distribution of task categories, i.e. Bug Fix, Feature, and Refactoring (40-40-20 split). We also ensured we have representation from all repos.
+The datasets are available on [Huggingface](https://huggingface.co/datasets/AmazonScience/SWE-PolyBench). We have the full dataset (PB) (`AmazonScience/SWE-PolyBench`) with 2110 instances and a sampled dataset (total 500 instances) called `PB500` (`AmazonScience/SWE-PolyBench_500`) where we have 125 instances from each language and a good distribution of task categories, i.e. Bug Fix, Feature, and Refactoring (40-40-20 split). We also ensured we have representation from all repos.
 
 ## Evaluation
 The main file to run is `src/poly_bench_evaluation/run_evaluation.py`. These are the following parameters it takes:
