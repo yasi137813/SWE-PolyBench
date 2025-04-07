@@ -37,17 +37,17 @@ Using a conda environment with python=3.11 is recommended.
 3. Run `pip install -e .` from root folder.
 4. Run the evaluation using:
 ```sh
-python3 src/poly_bench_evaluation/run_evaluation.py --dataset-path <dataset_path> --result-path ./eval_logs
+python3 src/poly_bench_evaluation/run_evaluation.py --dataset-path <dataset_path_or_hf_path> --result-path ./eval_logs
 ```
 
 A sample run command to evaluage gold code patches (from root directory of package):
 ```sh
-python3 src/poly_bench_evaluation/run_evaluation.py --dataset-path ./datasets/polybench_javascript.csv --result-path ./eval_logs/ --num-threads 9 --repo-path ~/repos --delete-image --evaluate-gold
+python3 src/poly_bench_evaluation/run_evaluation.py --dataset-path AmazonScience/SWE-PolyBench --result-path ./eval_logs/ --num-threads 9 --repo-path ~/repos --delete-image --evaluate-gold
 ```
 
 A sample run command to evaluate model generated patches (from root directory of package):
 ```sh
-python3 src/poly_bench_evaluation/run_evaluation.py --dataset-path ./datasets/polybench_javascript.csv --result-path ./eval_logs/ --num-threads 9 --repo-path ~/repos --delete-image --predictions-path ./model_generated_predictions.jsonl --skip-existing
+python3 src/poly_bench_evaluation/run_evaluation.py --dataset-path AmazonScience/SWE-PolyBench --result-path ./eval_logs/ --num-threads 9 --repo-path ~/repos --delete-image --predictions-path ./model_generated_predictions.jsonl --skip-existing
 ```
 ## Results
 
