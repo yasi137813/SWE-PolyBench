@@ -1,6 +1,6 @@
 # SWE-PolyBench
 
-PolyBench is a multi language repo level software engineering benchmark. Currently it includes 4 languages: Python, Java, Javascript, and Typescript. The number of instances in each language is:
+SWE-PolyBench is a multi language repo level software engineering benchmark. Currently it includes 4 languages: Python, Java, Javascript, and Typescript. The number of instances in each language is:
 
 Javascript: 1017
 
