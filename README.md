@@ -1,6 +1,9 @@
 # SWE-PolyBench
 
-SWE-PolyBench is a multi language repo level software engineering benchmark. Currently it includes 4 languages: Python, Java, Javascript, and Typescript. The number of instances in each language is:
+Paper: [SWE-PolyBench: A multi-language benchmark for repository level evaluation of coding agents](https://arxiv.org/abs/2504.08703)
+Datasets: [SWE-PolyBench](https://huggingface.co/datasets/AmazonScience/SWE-PolyBench)
+
+Hello! We are delighted to announce SWE-PolyBench! A multi language repo level software engineering benchmark. Currently it includes 4 languages: Python, Java, Javascript, and Typescript. The number of instances in each language is:
 
 Javascript: 1017
 
@@ -11,7 +14,7 @@ Python: 199
 Java: 165
 
 ## Datasets
-The datasets are available on [Huggingface](https://huggingface.co/datasets/AmazonScience/SWE-PolyBench). We have the full dataset (PB) (`AmazonScience/SWE-PolyBench`) with 2110 instances and a sampled dataset (total 500 instances) called `PB500` (`AmazonScience/SWE-PolyBench_500`) where we have 125 instances from each language and a good distribution of task categories, i.e. Bug Fix, Feature, and Refactoring (40-40-20 split). We also ensured we have representation from all repos.
+The datasets are available on Huggingface. We have the full dataset (PB) (`AmazonScience/SWE-PolyBench`) with 2110 instances and a sampled dataset (total 500 instances) called `PB500` (`AmazonScience/SWE-PolyBench_500`) where we have 125 instances from each language and a good distribution of task categories, i.e. Bug Fix, Feature, and Refactoring (40-40-20 split). We also ensured we have representation from all repos.
 
 ## Evaluation
 The main file to run is `src/poly_bench_evaluation/run_evaluation.py`. These are the following parameters it takes:
@@ -62,6 +65,20 @@ For running the sampled dataset, we expect the runtime to be ~7-8 hours (with 7-
 
 ## Submission
 To make a submission to SWE-PolyBench leaderboard, please follow this [README](https://github.com/amazon-science/SWE-PolyBench/blob/submission/README.md).
+
+## ✍️ Citation
+If you find our work helpful, please use the following citation.
+```
+@misc{rashid2025swepolybenchmultilanguagebenchmarkrepository,
+      title={SWE-PolyBench: A multi-language benchmark for repository level evaluation of coding agents}, 
+      author={Muhammad Shihab Rashid and Christian Bock and Yuan Zhuang and Alexander Buccholz and Tim Esler and Simon Valentin and Luca Franceschi and Martin Wistuba and Prabhu Teja Sivaprasad and Woo Jung Kim and Anoop Deoras and Giovanni Zappella and Laurent Callot},
+      year={2025},
+      eprint={2504.08703},
+      archivePrefix={arXiv},
+      primaryClass={cs.SE},
+      url={https://arxiv.org/abs/2504.08703}, 
+}
+```
 
 ## Troubleshooting
 If you get container conflict error (which may happen if you terminate your running code and run again), then please execute this command in terminal:
