@@ -1,18 +1,14 @@
-# SWE-PolyBench
+## SWE-PolyBench: A multi-language benchmark for repository level evaluation of coding agents
 
-Paper: [SWE-PolyBench: A multi-language benchmark for repository level evaluation of coding agents](https://arxiv.org/abs/2504.08703)
+<div align="center">
+  
+[![Website](https://img.shields.io/badge/Website-Visit-blue?style=for-the-badge)](https://amazon-science.github.io/SWE-PolyBench/)
+[![Paper](https://img.shields.io/badge/Paper-arXiv-red?style=for-the-badge)](https://arxiv.org/abs/2504.08703)
+[![Dataset](https://img.shields.io/badge/Dataset-HuggingFace-yellow?style=for-the-badge)](https://huggingface.co/datasets/AmazonScience/SWE-PolyBench)
 
-Datasets: [SWE-PolyBench](https://huggingface.co/datasets/AmazonScience/SWE-PolyBench)
+</div>
 
-Hello! We are delighted to announce SWE-PolyBench! A multi language repo level software engineering benchmark. Currently it includes 4 languages: Python, Java, Javascript, and Typescript. The number of instances in each language is:
-
-Javascript: 1017
-
-Typescript: 729
-
-Python: 199
-
-Java: 165
+Hello! We are delighted to announce SWE-PolyBench! A multi language repo level software engineering benchmark. It contains 2110 curated issues in four languages (Java, JavaScript, TypeScript, and Python). In addition, it contains a stratified subset of 500 issues (SWE-PolyBench500) for the purpose of rapid experimentation. Please find more details below.
 
 ## Datasets
 The datasets are available on Huggingface. We have the full dataset (PB) (`AmazonScience/SWE-PolyBench`) with 2110 instances and a sampled dataset (total 500 instances) called `PB500` (`AmazonScience/SWE-PolyBench_500`) where we have 125 instances from each language and a good distribution of task categories, i.e. Bug Fix, Feature, and Refactoring (40-40-20 split). We also ensured we have representation from all repos.
