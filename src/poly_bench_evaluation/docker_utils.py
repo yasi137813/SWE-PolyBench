@@ -346,10 +346,6 @@ EOF"""
                 self.client.images.remove(self.image_id, force=True)
             except docker.errors.ImageNotFound:
                 pass  # Image doesn't exist, nothing to delete
-            try:  # remove the copied image from ecr in local
-                self.client.images.remove(self.full_image_uri, force=True)
-            except docker.errors.ImageNotFound:
-                pass
 
     def __del__(self):
         """Stop and remove the container, and delete the image if provided."""
