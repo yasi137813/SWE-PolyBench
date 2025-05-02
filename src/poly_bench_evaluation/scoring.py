@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import pandas as pd
+
+from datasets import load_dataset
 from loguru import logger
 
 from poly_bench_evaluation.polybench_data import (
@@ -256,7 +258,15 @@ def aggregate_logs(
         json.dump(asdict(result), f, indent=4)
 
     # Print results
-    dataset = pd.read_csv(dataset_path)
+    try:
+        dataset = (
+            pd.read_csv(dataset_path)
+            if dataset_path.endswith(".csv")
+            else load_dataset(dataset_path, split="test").to_pandas()
+        )
+    except Exception:
+        raise ValueError("Please provide a correct dataset file or huggingface path.")
+
     if not metrics_only:
         _print_detailed_results(dataset, result)
     _print_retrieval_metrics(dataset, file_re_df, node_re_df)
