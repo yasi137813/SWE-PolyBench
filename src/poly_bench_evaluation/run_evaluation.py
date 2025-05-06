@@ -116,8 +116,10 @@ def evaluate_instance(
     # build docker if image id is not available in local or public.ecr
     docker_manager = DockerManager(image_id=image_id, delete_image=delete_image, client=client)
 
+    image_built = False
     if not docker_manager.check_image_local(local_image_name=image_id):
         logger.info("Image not found locally, building docker images...")
+        image_built = True
         # clone the repo and build docker image
         repo_manager = RepoManager(repo_name=repo, repo_path=repo_path)
         repo_manager.clone_repo()
@@ -259,7 +261,7 @@ def evaluate_instance(
     )
 
     docker_manager.__del__()
-    if repo_manager is not None:
+    if image_built and repo_manager is not None:
         repo_manager.__del__()
 
 
