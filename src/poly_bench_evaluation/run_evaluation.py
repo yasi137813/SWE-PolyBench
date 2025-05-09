@@ -116,10 +116,9 @@ def evaluate_instance(
     # build docker if image id is not available in local or public.ecr
     docker_manager = DockerManager(image_id=image_id, delete_image=delete_image, client=client)
 
-    image_built = False
+    repo_manager = None
     if not docker_manager.check_image_local(local_image_name=image_id):
         logger.info("Image not found locally, building docker images...")
-        image_built = True
         # clone the repo and build docker image
         repo_manager = RepoManager(repo_name=repo, repo_path=repo_path)
         repo_manager.clone_repo()
@@ -177,7 +176,7 @@ def evaluate_instance(
 
         # Store retrieval metrics
         instance_metric_output = instance_level_metric_scoring(
-            instance=instance, repo_path=repo_path, node_retrieval_metrics=node_retrieval_metrics
+            instance=instance, repo_path=repo_path, node_retrieval_metrics=node_retrieval_metrics, modified_nodes=instance.modified_nodes
         )
         store_instance_level_output(
             instance_output=instance_metric_output, result_path=result_path, suffix="_metrics"
@@ -254,14 +253,14 @@ def evaluate_instance(
 
     # Store retrieval metrics
     instance_metric_output = instance_level_metric_scoring(
-        instance=instance, repo_path=repo_path, node_retrieval_metrics=node_retrieval_metrics
+        instance=instance, repo_path=repo_path, node_retrieval_metrics=node_retrieval_metrics, modified_nodes=instance.modified_nodes
     )
     store_instance_level_output(
         instance_output=instance_metric_output, result_path=result_path, suffix="_metrics"
     )
 
     docker_manager.__del__()
-    if image_built and repo_manager is not None:
+    if repo_manager is not None:
         repo_manager.__del__()
 
 
