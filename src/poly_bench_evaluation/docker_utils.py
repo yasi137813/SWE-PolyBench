@@ -8,7 +8,7 @@ import threading
 import time
 from pathlib import Path
 from typing import List, Literal
-import ast
+
 import docker
 from loguru import logger
 from .constants import LANGUAGE_TO_BASE_DOCKERFILE
@@ -106,7 +106,7 @@ class DockerManager:
             bool: True if successful, False otherwise
         """
         assert self.container is not None, "Container not created"
-        content = content.encode('utf-8').decode('unicode_escape')
+
         # Create unique identifier for local files
         unique_id = f"{int(time.time() * 1000)}_{threading.get_ident()}"
         local_filename = f"temp_{unique_id}_{container_filename}"
