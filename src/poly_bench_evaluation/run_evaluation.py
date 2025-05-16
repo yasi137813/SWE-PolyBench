@@ -7,10 +7,13 @@ from multiprocessing.pool import ThreadPool
 from pathlib import Path
 from typing import Union
 import json
-
+import sys
 import docker
 import pandas as pd
 from loguru import logger
+
+logger.remove()
+logger.add(sink=sys.stderr, level="DEBUG")
 
 from poly_bench_evaluation.constants import DEFAULT_TIMEOUT, JAVA_TIMEOUT, REPO_TO_PARSER_CLASS
 from poly_bench_evaluation.docker_utils import DockerManager
@@ -31,7 +34,6 @@ from poly_bench_evaluation.scoring import (
     store_instance_level_output,
 )
 from datasets import load_dataset
-
 
 def evaluate_instance(
     instance: PolyBenchInstance,
@@ -116,6 +118,7 @@ def evaluate_instance(
     # build docker if image id is not available in local or public.ecr
     docker_manager = DockerManager(image_id=image_id, delete_image=delete_image, client=client)
 
+    repo_manager = None
     if not docker_manager.check_image_local(local_image_name=image_id):
         logger.info("Image not found locally, building docker images...")
         # clone the repo and build docker image
@@ -175,7 +178,7 @@ def evaluate_instance(
 
         # Store retrieval metrics
         instance_metric_output = instance_level_metric_scoring(
-            instance=instance, repo_path=repo_path, node_retrieval_metrics=node_retrieval_metrics
+            instance=instance, repo_path=repo_path, node_retrieval_metrics=node_retrieval_metrics, modified_nodes=instance.modified_nodes
         )
         store_instance_level_output(
             instance_output=instance_metric_output, result_path=result_path, suffix="_metrics"
@@ -252,7 +255,7 @@ def evaluate_instance(
 
     # Store retrieval metrics
     instance_metric_output = instance_level_metric_scoring(
-        instance=instance, repo_path=repo_path, node_retrieval_metrics=node_retrieval_metrics
+        instance=instance, repo_path=repo_path, node_retrieval_metrics=node_retrieval_metrics, modified_nodes=instance.modified_nodes
     )
     store_instance_level_output(
         instance_output=instance_metric_output, result_path=result_path, suffix="_metrics"
@@ -291,7 +294,7 @@ def evaluate_predictions(
         ValueError: If the predictions file is not in the correct format.
     """
     client = docker.from_env(timeout=720)
-    try:
+    try:    
         dataset = (
             pd.read_csv(dataset_path)
             if dataset_path.endswith(".csv")
