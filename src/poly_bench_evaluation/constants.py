@@ -124,12 +124,12 @@ java-17-amazon-corretto-devel \
 java-17-amazon-corretto-jmods
 
 RUN cd /usr/local \
-   && wget https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz \
-   && tar zxvf apache-maven-3.9.9-bin.tar.gz \
-   && rm apache-maven-3.9.9-bin.tar.gz
+   && wget https://dlcdn.apache.org/maven/maven-3/3.9.10/binaries/apache-maven-3.9.10-bin.tar.gz \
+   && tar zxvf apache-maven-3.9.10-bin.tar.gz \
+   && rm apache-maven-3.9.10-bin.tar.gz
 
-ENV MAVEN_HOME="/usr/local/apache-maven-3.9.9"
-ENV M2_HOME="/usr/local/apache-maven-3.9.9"
+ENV MAVEN_HOME="/usr/local/apache-maven-3.9.10"
+ENV M2_HOME="/usr/local/apache-maven-3.9.10"
 ENV PATH="$M2_HOME/bin:$PATH"
 """
 
