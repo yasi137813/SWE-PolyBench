@@ -64,7 +64,6 @@ RUN . $NVM_DIR/nvm.sh \
     && nvm install 8.9.1 \
     && nvm install 6.9.1 \
     && nvm install 4.9.1 \
-    && nvm install 0.10.10 \
     && nvm alias default $NODE_VERSION \
     && nvm use default
 
@@ -76,8 +75,7 @@ RUN . $NVM_DIR/nvm.sh \
     && nvm use 12 && node --version && node -e 'console.log("hello world");' \
     && nvm use 8 && node --version && node -e 'console.log("hello world");' \
     && nvm use 6 && node --version && node -e 'console.log("hello world");' \
-    && nvm use 4 && node --version && node -e 'console.log("hello world");' \
-    && nvm use 0 && node --version && node -e 'console.log("hello world");'
+    && nvm use 4 && node --version && node -e 'console.log("hello world");' 
 
 # install yarn on all node versions
 RUN . $NVM_DIR/nvm.sh \
@@ -87,8 +85,7 @@ RUN . $NVM_DIR/nvm.sh \
     && nvm use 12 && npm install -g yarn \
     && nvm use 8 && npm install -g yarn \
     && nvm use 6 && npm install -g yarn \
-    && nvm use 4 && npm install -g yarn \
-    && nvm use 0 && npm install -g yarn
+    && nvm use 4 && npm install -g yarn 
 
 RUN wget -O firefox.tar.xz "https://download.mozilla.org/?product=firefox-latest&os=linux64&lang=en-US" && \
     tar xJf firefox.tar.xz -C /opt/ && \
@@ -199,7 +196,6 @@ RUN . $NVM_DIR/nvm.sh \
     && nvm install 8.9.1 \
     && nvm install 6.9.1 \
     && nvm install 4.9.1 \
-    && nvm install 0.10.10 \
     && nvm alias default $NODE_VERSION \
     && nvm use default
 
@@ -213,8 +209,7 @@ RUN . $NVM_DIR/nvm.sh \
     && nvm use 10 && node --version && node -e 'console.log("hello world");' \
     && nvm use 8 && node --version && node -e 'console.log("hello world");' \
     && nvm use 6 && node --version && node -e 'console.log("hello world");' \
-    && nvm use 4 && node --version && node -e 'console.log("hello world");' \
-    && nvm use 0 && node --version && node -e 'console.log("hello world");'
+    && nvm use 4 && node --version && node -e 'console.log("hello world");' 
 
 # install yarn on all node versions
 RUN . $NVM_DIR/nvm.sh \
@@ -226,8 +221,7 @@ RUN . $NVM_DIR/nvm.sh \
     && nvm use 10 && npm install -g yarn \
     && nvm use 8 && npm install -g yarn \
     && nvm use 6 && npm install -g yarn \
-    && nvm use 4 && npm install -g yarn \
-    && nvm use 0 && npm install -g yarn
+    && nvm use 4 && npm install -g yarn 
 
 RUN wget -O firefox.tar.xz "https://download.mozilla.org/?product=firefox-latest&os=linux64&lang=en-US" && \
     tar xJf firefox.tar.xz -C /opt/ && \

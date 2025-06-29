@@ -56,7 +56,7 @@ class DockerManager:
         success = 1
         try:
             image, build_logs = self.client.images.build(
-                path=str(repo_path), tag=self.image_id, rm=True
+                path=str(repo_path), tag=self.image_id, rm=True, platform="linux/amd64"
             )
             for log in build_logs:
                 if "stream" in log:
