@@ -315,8 +315,10 @@ def evaluate_predictions(
     logger.info(f"Remaining samples to evaluate: {len(dataset)}")
     assert "language" in dataset.columns, "language column not found in dataset file."
 
-    logger.info("Building base images...")
-    for language in dataset["language"].unique():
+    unique_languages = dataset.loc[dataset['model_patch'].notnull() & (dataset['model_patch'] != ''), 'language'].unique()
+    logger.info(f"Building base images for {unique_languages}...")
+    
+    for language in unique_languages:
         if language != "Python":
             base_image_id = f"polybench_{language.lower()}_base"
             base_docker_manager = DockerManager(
