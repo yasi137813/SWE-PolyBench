@@ -314,18 +314,6 @@ def evaluate_predictions(
 
     logger.info(f"Remaining samples to evaluate: {len(dataset)}")
     assert "language" in dataset.columns, "language column not found in dataset file."
-
-    unique_languages = dataset.loc[dataset['model_patch'].notnull() & (dataset['model_patch'] != ''), 'language'].unique()
-    logger.info(f"Building base images for {unique_languages}...")
-    
-    for language in unique_languages:
-        if language != "Python":
-            base_image_id = f"polybench_{language.lower()}_base"
-            base_docker_manager = DockerManager(
-                image_id=base_image_id, delete_image=False, client=client
-            )
-            base_docker_manager.build_base_image(language=language)
-
     if predictions_path:
         try:
             predictions = pd.read_json(predictions_path, lines=True)
@@ -345,8 +333,23 @@ def evaluate_predictions(
             )
             # Fill any missing model_patch values with empty string
             dataset.fillna({"model_patch": ""}, inplace=True)
+            unique_languages = dataset.loc[dataset['model_patch'].notnull() & (dataset['model_patch'] != ''), 'language'].unique()
+
         except Exception:
             raise ValueError("Please provide a correct predictions jsonl file.")
+    else:
+        unique_languages = dataset['language'].unique()
+
+
+    logger.info(f"Building base images for {unique_languages}...")
+    
+    for language in unique_languages:
+        if language != "Python":
+            base_image_id = f"polybench_{language.lower()}_base"
+            base_docker_manager = DockerManager(
+                image_id=base_image_id, delete_image=False, client=client
+            )
+            base_docker_manager.build_base_image(language=language)
 
     with ThreadPool(num_threads) as pool:
 
