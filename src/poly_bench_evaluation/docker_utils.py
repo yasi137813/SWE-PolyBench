@@ -46,6 +46,9 @@ class DockerManager:
         Returns:
             success: 0 if build was successful, 1 otherwise
         """
+        # updating dockerfile so it doesn't overwrite package-lock.json
+        dockerfile_content = dockerfile_content.replace("npm install", "npm install --no-save")
+
         # Create a Dockerfile in the temporary directory with the dockerfile content
         (repo_path / "Dockerfile").write_text(dockerfile_content)
 
@@ -159,6 +162,7 @@ class DockerManager:
                 workdir=workdir,
                 user="root",
             )
+            logger.info(f"exec_result for git apply: {exec_result.output.decode()}")
             if exec_result.exit_code != 0:
                 # Second try: patch command
                 exec_result = self.container.exec_run(
