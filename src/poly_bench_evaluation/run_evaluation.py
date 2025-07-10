@@ -5,12 +5,13 @@ import argparse
 import importlib
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
-from typing import Union
+from typing import Union, List
 import json
 import sys
 import docker
 import pandas as pd
 from loguru import logger
+from unidiff import PatchSet
 
 logger.remove()
 logger.add(sink=sys.stderr, level="DEBUG")
@@ -34,6 +35,17 @@ from poly_bench_evaluation.scoring import (
     store_instance_level_output,
 )
 from datasets import load_dataset
+
+def _get_modified_files(patch: str) -> List[str]:
+    """
+    Get the list of modified files in a patch
+    """
+    source_files = []
+    for file in PatchSet(patch):
+        if file.source_file != "/dev/null":
+            source_files.append(file.source_file)
+    source_files = [x[2:] for x in source_files if x.startswith("a/")]
+    return source_files
 
 def evaluate_instance(
     instance: PolyBenchInstance,
@@ -92,7 +104,6 @@ def evaluate_instance(
 
     if not model_patch.strip():  # if model patch is empty
         # Store pass rate results
-        logger.info(f"model patch empty for {instance_id}")
         instance_output = instance_level_scoring(
             instance_id=instance_id,
             result={},
@@ -161,7 +172,29 @@ def evaluate_instance(
     # Create a docker container and run the image
     docker_manager.create_container()
 
-    # Apply the test patch
+    # Apply the code patch first
+    try:
+        patch_success = docker_manager.apply_patch_to_container(
+            patch_content=model_patch, patch_type="code"
+        )
+    except Exception:
+        patch_success = 1
+        logger.debug(f"patch error for instance id: {instance_id}")
+
+    # Reset all files from test patch to their original state before applying test patch
+    # This prevents conflicts between code patch modifications and test patch
+    try:
+        # Get all modified files from the test patch
+        files_to_reset = _get_modified_files(test_patch)
+        
+        # Reset the files using the Docker manager
+        reset_success = docker_manager.reset_files(files_to_reset)
+        if not reset_success:
+            logger.warning(f"Failed to reset files for instance id: {instance_id}")
+    except Exception as e:
+        logger.warning(f"Error resetting files for instance id: {instance_id}: {e}")
+
+    # Apply the test patch now
     try:
         _ = docker_manager.apply_patch_to_container(patch_content=test_patch, patch_type="test")
     except Exception:
@@ -187,14 +220,6 @@ def evaluate_instance(
         docker_manager.__del__()
         return
 
-    # Apply the code patch
-    try:
-        patch_success = docker_manager.apply_patch_to_container(
-            patch_content=model_patch, patch_type="code"
-        )
-    except Exception:
-        patch_success = 1
-        logger.debug(f"patch error for instance id: {instance_id}")
 
     if patch_success != 0:
         logger.info(f"patch apply error for instance id: {instance_id}")

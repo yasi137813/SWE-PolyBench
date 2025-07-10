@@ -185,6 +185,53 @@ class DockerManager:
 
         return success
 
+    def reset_files(self, file_paths: List[str]) -> bool:
+        """Reset files to their original state using git checkout.
+        
+        Args:
+            file_paths: List of file paths to reset
+            
+        Returns:
+            bool: True if reset was successful, False otherwise
+        """
+        try:
+            if not file_paths:
+                logger.debug("No files found to reset")
+                return True
+                
+            # Reset each file using git
+            workdir = str(self._get_workdir_from_image())
+            assert self.container is not None, "Container not created"
+            
+            for file_path in file_paths:
+                try:
+                    # Use git checkout to reset the file to its original state
+                    exec_result = self.container.exec_run(
+                        cmd=f"git checkout HEAD -- {file_path}",
+                        workdir=workdir,
+                        user="root",
+                    )
+                    if exec_result.exit_code != 0:
+                        logger.warning(f"Failed to reset {file_path}: {exec_result.output.decode()}")
+                        # Try alternative approach with git restore if available
+                        exec_result = self.container.exec_run(
+                            cmd=f"git restore {file_path}",
+                            workdir=workdir,
+                            user="root",
+                        )
+                        if exec_result.exit_code != 0:
+                            logger.warning(f"Failed to restore {file_path}: {exec_result.output.decode()}")
+                    else:
+                        logger.debug(f"Successfully reset file: {file_path}")
+                except Exception as e:
+                    logger.warning(f"Error resetting file {file_path}: {e}")
+                    
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error in reset_files: {e}")
+            return False
+
     def docker_run(self, test_command: str, timeout: int) -> int:
         """Run the CMD command from dockerfile inside the running container.
         Args:
