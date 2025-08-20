@@ -320,11 +320,14 @@ def evaluate_predictions(
     """
     client = docker.from_env(timeout=720)
     try:    
-        dataset = (
-            pd.read_csv(dataset_path)
-            if dataset_path.endswith(".csv")
-            else load_dataset(dataset_path, split="test").to_pandas()
-        )
+            
+        if dataset_path.endswith(".csv"): 
+            dataset = pd.read_csv(dataset_path)
+        elif dataset_path.endswith(".json"):
+            dataset = pd.read_json(dataset_path)
+        else:
+            dataset =load_dataset(dataset_path, split="test").to_pandas()
+        
     except Exception:
         raise ValueError("Please provide a correct dataset file or huggingface path.")
 
